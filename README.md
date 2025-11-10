@@ -29,7 +29,7 @@ Run the game.
 
 Press F1 (by default) to open the Configuration Manager and customize the UI.
 
-Press F9 (by default) to enter UI Edit Mode and drag UI elements around.
+Press F9 (by default) to enter or exit the UI Edit Mode and drag UI elements around.
 
 To drag elements that are not draggable by default, use the middle mouse button.
 All others can be dragged using their blue diamond handles, as usual.
