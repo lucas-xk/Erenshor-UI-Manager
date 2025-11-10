@@ -511,7 +511,16 @@ namespace uimanager
 
             ApplySavedPositions();
         }
-        
+
+        private bool IsChatOpen()
+        {
+            var chatInput = GameObject.Find("UI/UIElements/LogCanvas/ChatPar/InputBox");
+            if (chatInput == null)
+                return false;
+                        
+            return chatInput.activeInHierarchy;
+        }
+
         private bool editMode = false;
         private GameObject draggingObj;
         private Vector3 offset;
@@ -520,6 +529,9 @@ namespace uimanager
         {
             if (Input.GetKeyDown(toggleEditKey.Value))
             {
+                if (IsChatOpen())
+                    return;
+
                 editMode = !editMode;
                 SetEditMode(editMode);
                 DiamondsToggle(editMode);
@@ -534,11 +546,17 @@ namespace uimanager
 
             if (Input.GetKeyDown(openGroup.Value))
             {
+                if (IsChatOpen())
+                    return;
+
                 OpenGroupBuilder();
             }
 
             if (Input.GetKeyDown(openWorldMap.Value))
             {
+                if (IsChatOpen())
+                    return;
+
                 OpenWorldMap();
             }
         }
