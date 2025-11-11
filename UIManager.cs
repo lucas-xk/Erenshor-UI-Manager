@@ -545,8 +545,7 @@ namespace uimanager
             string inventoryPath = "UI/UIElements/InvPar";
             GameObject inventoryObj = GameObject.Find(inventoryPath);
             if (inventoryObj == null) return;
-
-            // Lista de objetos que você quer colocar por baixo
+            
             string[] objectsToMove = new string[]
             {
                 "UI/UIElements/Canvas/CompassBarProLinear",
@@ -569,13 +568,11 @@ namespace uimanager
             {
                 GameObject obj = GameObject.Find(path);
                 if (obj != null && obj.transform.parent == inventoryObj.transform.parent)
-                {
-                    // Coloca o objeto um índice abaixo do inventário
+                {                    
                     obj.transform.SetSiblingIndex(invIndex - 1);
                 }
                 else if (obj != null)
-                {
-                    // Se estiver em Canvas diferente, ajusta o sortingOrder
+                {                    
                     Canvas objCanvas = obj.GetComponent<Canvas>();
                     Canvas invCanvas = inventoryObj.GetComponentInParent<Canvas>();
                     if (objCanvas != null && invCanvas != null)
