@@ -19,11 +19,14 @@ Features:
 
 How to Install:
 
-Requires BepInEx: https://github.com/BepInEx/BepInEx
+Requires BepInEx:<br>
+https://github.com/BepInEx/BepInEx
 
-For easier UI configuration, install BepInEx Configuration Manager: https://github.com/BepInEx/BepInEx.ConfigurationManager/releases
+For easier UI configuration, install BepInEx Configuration Manager:<br>
+https://github.com/BepInEx/BepInEx.ConfigurationManager/releases
 
-Download the mod from [here](https://github.com/lucas-xk/Erenshor-UI-Manager/releases).
+Download the mod from here:<br>
+https://github.com/lucas-xk/Erenshor-UI-Manager/releases
 
 Copy the compiled DLL into your BepInEx/plugins folder.
 
