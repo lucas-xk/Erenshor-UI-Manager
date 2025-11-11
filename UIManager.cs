@@ -5,7 +5,7 @@ using remove_ui_borders;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
+using TMPro;
 
 namespace uimanager
 {
@@ -510,6 +510,8 @@ namespace uimanager
             UpdateMiniMapZoneName();
 
             ApplySavedPositions();
+
+            PlaceObjectsUnderInventory();
         }
 
         private bool IsChatOpen()
@@ -521,15 +523,75 @@ namespace uimanager
             return chatInput.activeInHierarchy;
         }
 
+        private bool IsAHTyping()
+        {
+            var inputObj = GameObject.Find("UI/UIElements/MarketPar/NewAH/InfoBG/AHSearch");
+            if (inputObj == null)
+                return false;
+
+            var inputField = inputObj.GetComponent<TMP_InputField>();
+            if (inputField == null)
+                return false;
+            
+            return inputField.isFocused;
+        }
+
         private bool editMode = false;
         private GameObject draggingObj;
         private Vector3 offset;
+
+        private void PlaceObjectsUnderInventory()
+        {
+            string inventoryPath = "UI/UIElements/InvPar";
+            GameObject inventoryObj = GameObject.Find(inventoryPath);
+            if (inventoryObj == null) return;
+
+            // Lista de objetos que você quer colocar por baixo
+            string[] objectsToMove = new string[]
+            {
+                "UI/UIElements/Canvas/CompassBarProLinear",
+                "UI/UIElements/Canvas/Loc",
+                "UI/UIElements/Image",
+                "UI/UIElements/Image (1)",
+                "UI/UIElements/Image (2)",
+                "UI/UIElements/Image (3)",
+                "UI/UIElements/Image (4)",
+                "UI/UIElements/Image (5)",
+                "UI/UIElements/Image (6)",
+                "UI/UIElements/Image (7)",
+                "UI/UIElements/Image (8)",
+                "UI/UIElements/Image (9)"
+            };
+
+            int invIndex = inventoryObj.transform.GetSiblingIndex();
+
+            foreach (var path in objectsToMove)
+            {
+                GameObject obj = GameObject.Find(path);
+                if (obj != null && obj.transform.parent == inventoryObj.transform.parent)
+                {
+                    // Coloca o objeto um índice abaixo do inventário
+                    obj.transform.SetSiblingIndex(invIndex - 1);
+                }
+                else if (obj != null)
+                {
+                    // Se estiver em Canvas diferente, ajusta o sortingOrder
+                    Canvas objCanvas = obj.GetComponent<Canvas>();
+                    Canvas invCanvas = inventoryObj.GetComponentInParent<Canvas>();
+                    if (objCanvas != null && invCanvas != null)
+                    {
+                        objCanvas.overrideSorting = true;
+                        objCanvas.sortingOrder = invCanvas.sortingOrder - 1;
+                    }
+                }
+            }
+        }
 
         private void Update()
         {
             if (Input.GetKeyDown(toggleEditKey.Value))
             {
-                if (IsChatOpen())
+                if (IsChatOpen() || IsAHTyping())
                     return;
 
                 editMode = !editMode;
@@ -546,7 +608,7 @@ namespace uimanager
 
             if (Input.GetKeyDown(openGroup.Value))
             {
-                if (IsChatOpen())
+                if (IsChatOpen() || IsAHTyping())
                     return;
 
                 OpenGroupBuilder();
@@ -554,7 +616,7 @@ namespace uimanager
 
             if (Input.GetKeyDown(openWorldMap.Value))
             {
-                if (IsChatOpen())
+                if (IsChatOpen() || IsAHTyping())
                     return;
 
                 OpenWorldMap();
