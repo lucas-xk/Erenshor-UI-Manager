@@ -567,19 +567,9 @@ namespace uimanager
             foreach (var path in objectsToMove)
             {
                 GameObject obj = GameObject.Find(path);
-                if (obj != null && obj.transform.parent == inventoryObj.transform.parent)
+                if (obj != null)
                 {                    
                     obj.transform.SetSiblingIndex(invIndex - 1);
-                }
-                else if (obj != null)
-                {                    
-                    Canvas objCanvas = obj.GetComponent<Canvas>();
-                    Canvas invCanvas = inventoryObj.GetComponentInParent<Canvas>();
-                    if (objCanvas != null && invCanvas != null)
-                    {
-                        objCanvas.overrideSorting = true;
-                        objCanvas.sortingOrder = invCanvas.sortingOrder - 1;
-                    }
                 }
             }
         }
