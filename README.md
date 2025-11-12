@@ -9,13 +9,25 @@ The features from the Clean Hotbars and Remove UI Borders mods have been integra
 Features:
 
 - UI Edit Mode (default key: F9, rebindable).
-- Removes the black borders/lines from UI windows. These borders only appear while in UI Edit Mode to help with alignment.
-- Removes all blue diamonds. They also only appear in UI Edit Mode.
+- Removes the black borders/lines from UI windows.
+<br>These borders only appear while in UI Edit Mode to help with alignment.
+- Removes all blue diamonds.
+<br>They also only appear in UI Edit Mode.
 - Allows dragging all UI elements.
 - Allows resetting dragged elements back to the game’s default positions.
 - Allows hiding any UI element or window.
-- Adds hotkeys for the Group Builder and World Map buttons (default: G and N, respectively, both rebindable). In vanilla, the World Map button loses its hotkey when the minimap is enabled via the server admin panel.
+- Adds hotkeys for the Group Builder and World Map buttons (default: G and N, respectively, both rebindable).
+<br>In vanilla, the World Map button loses its hotkey when the minimap is enabled via the server admin panel.
 - Buttons tooltip temporarily removed to avoid having to move it to another location if the player moves the buttons.
+- The vanilla minimap settings are now saved between sessions.
+  - Zoom level
+  - Lock North
+  - Draw real-time geometry
+- Full Configuration via Configuration Manager
+<br>You can now adjust the minimap settings (Zoom, Lock North, Draw real-time geometry) directly in the Configuration Manager, so you no longer need to use the vanilla minimap buttons and can hide them if you want.
+- Optional: "BigMap Position" mod
+<br>If you want the larger version of the minimap to appear centered on the screen, use the "BigMap Position" mod.
+Download the `bigmap-position.dll` from the releases to enable this feature.
 
 How to Install:
 
