@@ -1,11 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using clean_hotbars;
+using minimap_config_saver;
 using remove_ui_borders;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 namespace uimanager
 {
@@ -15,6 +16,7 @@ namespace uimanager
     {
         private RemoveUIBorders removeborders;
         private CleanHotbars cleanhotbars;
+        private MinimapConfigSaver minimapconfig;
 
         private ConfigEntry<bool> disableHotkeys;
 
@@ -66,6 +68,7 @@ namespace uimanager
         {
             removeborders = new RemoveUIBorders();
             cleanhotbars = new CleanHotbars();
+            minimapconfig = new MinimapConfigSaver(Config);
 
             SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -94,7 +97,7 @@ namespace uimanager
             disableCombatLog = Config.Bind("Right", "Combat Log", true, "Disables/Enables the combat log window");
 
             disableChatBottom = Config.Bind("Left", "Chat (bottom)", true, "Disables/Enables the bottom of the chat window");
-            disableChat = Config.Bind("Left", "Chat", true, "Disables/Enables the chat window");            
+            disableChat = Config.Bind("Left", "Chat", true, "Disables/Enables the chat window");
             disableParty = Config.Bind("Left", "Party Window", true, "Disables/Enables the party window");
             disablePet = Config.Bind("Left", "Pet Window", true, "Disables/Enables the pet window");
             disableHP = Config.Bind("Left", "Player HP/Mana window", true, "Disables/Enables the player HP/Mana window");
@@ -153,20 +156,27 @@ namespace uimanager
 
             posCompass.SettingChanged += (_, __) => ApplyPosition("CompassBarProLinear", posCompass.Value);
             posLoc.SettingChanged += (_, __) => ApplyPosition("Loc", posLoc.Value);
-            posMenu.SettingChanged += (_, __) => ApplyPosition("Image", posMenu.Value);
-            posInventory.SettingChanged += (_, __) => ApplyPosition("Image (1)", posInventory.Value);
-            posSkills.SettingChanged += (_, __) => ApplyPosition("Image (2)", posSkills.Value);
-            posJournal.SettingChanged += (_, __) => ApplyPosition("Image (3)", posJournal.Value);
-            posMap.SettingChanged += (_, __) => ApplyPosition("Image (4)", posMap.Value);
-            posOptions.SettingChanged += (_, __) => ApplyPosition("Image (5)", posOptions.Value);
-            posGamepad.SettingChanged += (_, __) => ApplyPosition("Image (6)", posGamepad.Value);
-            posHelp.SettingChanged += (_, __) => ApplyPosition("Image (7)", posHelp.Value);
-            posGroup.SettingChanged += (_, __) => ApplyPosition("Image (9)", posGroup.Value);
+            posMenu.SettingChanged += (_, __) => ApplyPosition("MenuButton", posMenu.Value);
+            posInventory.SettingChanged += (_, __) => ApplyPosition("InvButton", posInventory.Value);
+            posSkills.SettingChanged += (_, __) => ApplyPosition("SpellsButton", posSkills.Value);
+            posJournal.SettingChanged += (_, __) => ApplyPosition("JournalButton", posJournal.Value);
+            posMap.SettingChanged += (_, __) => ApplyPosition("WorldMapButton", posMap.Value);
+            posOptions.SettingChanged += (_, __) => ApplyPosition("SettingsButton", posOptions.Value);
+            posGamepad.SettingChanged += (_, __) => ApplyPosition("ToggleGamepad", posGamepad.Value);
+            posHelp.SettingChanged += (_, __) => ApplyPosition("HelpButton", posHelp.Value);
+            posGroup.SettingChanged += (_, __) => ApplyPosition("GroupBuilder", posGroup.Value);
         }
 
         private void DisableDescription()
         {
-            var Obj = GameObject.Find("UI/UIElements/Desc");
+            var Obj = GameObject.Find("UI/UIElements/RadioButtonPar/Desc");
+            if (Obj != null)
+                Obj.SetActive(false);
+        }
+
+        private void DisableButtonsDiamond()
+        {
+            var Obj = GameObject.Find("UI/UIElements/RadioButtonPar/DragButtons");
             if (Obj != null)
                 Obj.SetActive(false);
         }        
@@ -194,63 +204,63 @@ namespace uimanager
 
         private void UpdateMenu()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image");
+            var Obj = GameObject.Find("UI/UIElements/MenuButton");
             if (Obj != null)
                 Obj.SetActive(disableMenuButton.Value);
         }
 
         private void UpdateInventory()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (1)");
+            var Obj = GameObject.Find("UI/UIElements/InvButton");
             if (Obj != null)
                 Obj.SetActive(disableInventoryButton.Value);
         }
 
         private void UpdateSkills()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (2)");
+            var Obj = GameObject.Find("UI/UIElements/SpellsButton");
             if (Obj != null)
                 Obj.SetActive(disableSkillsButton.Value);
         }
 
         private void UpdateJournal()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (3)");
+            var Obj = GameObject.Find("UI/UIElements/JournalButton");
             if (Obj != null)
                 Obj.SetActive(disableJournalButton.Value);
         }
 
         private void UpdateMap()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (4)");
+            var Obj = GameObject.Find("UI/UIElements/WorldMapButton");
             if (Obj != null)
                 Obj.SetActive(disableMapButton.Value);
         }
 
         private void UpdateOptions()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (5)");
+            var Obj = GameObject.Find("UI/UIElements/SettingsButton");
             if (Obj != null)
                 Obj.SetActive(disableOptionsButton.Value);
         }
 
         private void UpdateGamepad()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (6)");
+            var Obj = GameObject.Find("UI/UIElements/ToggleGamepad");
             if (Obj != null)
                 Obj.SetActive(disableGamepadButton.Value);
         }
 
         private void UpdateHelp()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (7)");
+            var Obj = GameObject.Find("UI/UIElements/HelpButton");
             if (Obj != null)
                 Obj.SetActive(disableHelpButton.Value);
         }
 
         private void UpdateGroup()
         {
-            var Obj = GameObject.Find("UI/UIElements/Image (9)");
+            var Obj = GameObject.Find("UI/UIElements/GroupBuilder");
             if (Obj != null)
                 Obj.SetActive(disableGroupButton.Value);
         }
@@ -267,7 +277,7 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/CombatLogPar/CombatPar/CombatWindow/BottomBG");
             if (Obj != null)
                 Obj.SetActive(disableCombatLogBottom.Value);
-            
+
             Obj = GameObject.Find("UI/UIElements/CombatLogPar/CombatPar/CombatWindow/CombatBG");
             if (Obj != null)
                 Obj.SetActive(disableCombatLogBottom.Value);
@@ -408,15 +418,15 @@ namespace uimanager
         {
             SetLocalPosition("UI/UIElements/Canvas/CompassBarProLinear", posCompass.Value);
             SetLocalPosition("UI/UIElements/Canvas/Loc", posLoc.Value);
-            SetLocalPosition("UI/UIElements/Image", posMenu.Value);
-            SetLocalPosition("UI/UIElements/Image (1)", posInventory.Value);
-            SetLocalPosition("UI/UIElements/Image (2)", posSkills.Value);
-            SetLocalPosition("UI/UIElements/Image (3)", posJournal.Value);
-            SetLocalPosition("UI/UIElements/Image (4)", posMap.Value);
-            SetLocalPosition("UI/UIElements/Image (5)", posOptions.Value);
-            SetLocalPosition("UI/UIElements/Image (6)", posGamepad.Value);
-            SetLocalPosition("UI/UIElements/Image (7)", posHelp.Value);
-            SetLocalPosition("UI/UIElements/Image (9)", posGroup.Value);
+            SetLocalPosition("UI/UIElements/MenuButton", posMenu.Value);
+            SetLocalPosition("UI/UIElements/InvButton", posInventory.Value);
+            SetLocalPosition("UI/UIElements/SpellsButton", posSkills.Value);
+            SetLocalPosition("UI/UIElements/JournalButton", posJournal.Value);
+            SetLocalPosition("UI/UIElements/WorldMapButton", posMap.Value);
+            SetLocalPosition("UI/UIElements/SettingsButton", posOptions.Value);
+            SetLocalPosition("UI/UIElements/ToggleGamepad", posGamepad.Value);
+            SetLocalPosition("UI/UIElements/HelpButton", posHelp.Value);
+            SetLocalPosition("UI/UIElements/GroupBuilder", posGroup.Value);
         }
 
         private void SetLocalPosition(string path, Vector3 pos)
@@ -463,7 +473,7 @@ namespace uimanager
         }
 
         private string sceneName;
-        
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             sceneName = scene.name;
@@ -476,6 +486,9 @@ namespace uimanager
 
 
             DisableDescription();
+            DisableButtonsDiamond();
+            ReparentButtons();
+            PlaceObjectsUnderInventory();
 
             DiamondsToggle(false);
 
@@ -511,7 +524,7 @@ namespace uimanager
 
             ApplySavedPositions();
 
-            PlaceObjectsUnderInventory();
+            minimapconfig.MiniMapButtonsConfig();
         }
 
         private bool IsChatOpen()
@@ -519,7 +532,7 @@ namespace uimanager
             var chatInput = GameObject.Find("UI/UIElements/LogCanvas/ChatPar/InputBox");
             if (chatInput == null)
                 return false;
-                        
+
             return chatInput.activeInHierarchy;
         }
 
@@ -532,34 +545,58 @@ namespace uimanager
             var inputField = inputObj.GetComponent<TMP_InputField>();
             if (inputField == null)
                 return false;
-            
+
             return inputField.isFocused;
         }
 
         private bool editMode = false;
         private GameObject draggingObj;
         private Vector3 offset;
+        
+        private void ReparentButtons()
+        {
+            GameObject UIElementsObj = GameObject.Find("UI/UIElements");
+            if (UIElementsObj == null) return;
+
+            string[] objectsToMove = new string[]
+            {                
+                "UI/UIElements/RadioButtonPar/MenuButton",
+                "UI/UIElements/RadioButtonPar/InvButton",
+                "UI/UIElements/RadioButtonPar/SpellsButton",
+                "UI/UIElements/RadioButtonPar/WorldMapButton",
+                "UI/UIElements/RadioButtonPar/JournalButton",
+                "UI/UIElements/RadioButtonPar/SettingsButton",
+                "UI/UIElements/RadioButtonPar/ToggleGamepad",
+                "UI/UIElements/RadioButtonPar/HelpButton",
+                "UI/UIElements/RadioButtonPar/GroupBuilder"
+            };            
+
+            foreach (var path in objectsToMove)
+            {
+                GameObject obj = GameObject.Find(path);
+                if (obj != null)
+                {
+                    obj.transform.SetParent(UIElementsObj.transform, false);
+                }
+            }
+        }
 
         private void PlaceObjectsUnderInventory()
         {
-            string inventoryPath = "UI/UIElements/InvPar";
-            GameObject inventoryObj = GameObject.Find(inventoryPath);
+            GameObject inventoryObj = GameObject.Find("UI/UIElements/InvPar");
             if (inventoryObj == null) return;
-            
+
             string[] objectsToMove = new string[]
             {
-                "UI/UIElements/Canvas/CompassBarProLinear",
-                "UI/UIElements/Canvas/Loc",
-                "UI/UIElements/Image",
-                "UI/UIElements/Image (1)",
-                "UI/UIElements/Image (2)",
-                "UI/UIElements/Image (3)",
-                "UI/UIElements/Image (4)",
-                "UI/UIElements/Image (5)",
-                "UI/UIElements/Image (6)",
-                "UI/UIElements/Image (7)",
-                "UI/UIElements/Image (8)",
-                "UI/UIElements/Image (9)"
+                "UI/UIElements/MenuButton",
+                "UI/UIElements/InvButton",
+                "UI/UIElements/SpellsButton",
+                "UI/UIElements/WorldMapButton",
+                "UI/UIElements/JournalButton",
+                "UI/UIElements/SettingsButton",
+                "UI/UIElements/ToggleGamepad",
+                "UI/UIElements/HelpButton",
+                "UI/UIElements/GroupBuilder"
             };
 
             int invIndex = inventoryObj.transform.GetSiblingIndex();
@@ -568,7 +605,7 @@ namespace uimanager
             {
                 GameObject obj = GameObject.Find(path);
                 if (obj != null)
-                {                    
+                {
                     obj.transform.SetSiblingIndex(invIndex - 1);
                 }
             }
@@ -628,16 +665,15 @@ namespace uimanager
         {
             "UI/UIElements/Canvas/CompassBarProLinear",
             "UI/UIElements/Canvas/Loc",
-            "UI/UIElements/Image",
-            "UI/UIElements/Image (1)",
-            "UI/UIElements/Image (2)",
-            "UI/UIElements/Image (3)",
-            "UI/UIElements/Image (4)",
-            "UI/UIElements/Image (5)",
-            "UI/UIElements/Image (6)",
-            "UI/UIElements/Image (7)",
-            "UI/UIElements/Image (8)",
-            "UI/UIElements/Image (9)",
+            "UI/UIElements/MenuButton",
+            "UI/UIElements/InvButton",
+            "UI/UIElements/SpellsButton",
+            "UI/UIElements/WorldMapButton",
+            "UI/UIElements/JournalButton",
+            "UI/UIElements/SettingsButton",
+            "UI/UIElements/ToggleGamepad",
+            "UI/UIElements/HelpButton",
+            "UI/UIElements/GroupBuilder",
         };
 
         private void SetEditMode(bool enable)
@@ -700,15 +736,15 @@ namespace uimanager
             {
                 case "CompassBarProLinear": posCompass.Value = localPos; break;
                 case "Loc": posLoc.Value = localPos; break;
-                case "Image": posMenu.Value = localPos; break;
-                case "Image (1)": posInventory.Value = localPos; break;
-                case "Image (2)": posSkills.Value = localPos; break;
-                case "Image (3)": posJournal.Value = localPos; break;
-                case "Image (4)": posMap.Value = localPos; break;
-                case "Image (5)": posOptions.Value = localPos; break;
-                case "Image (6)": posGamepad.Value = localPos; break;
-                case "Image (7)": posHelp.Value = localPos; break;
-                case "Image (9)": posGroup.Value = localPos; break;
+                case "MenuButton": posMenu.Value = localPos; break;
+                case "InvButton": posInventory.Value = localPos; break;
+                case "SpellsButton": posSkills.Value = localPos; break;
+                case "JournalButton": posJournal.Value = localPos; break;
+                case "WorldMapButton": posMap.Value = localPos; break;
+                case "SettingsButton": posOptions.Value = localPos; break;
+                case "ToggleGamepad": posGamepad.Value = localPos; break;
+                case "HelpButton": posHelp.Value = localPos; break;
+                case "GroupBuilder": posGroup.Value = localPos; break;
             }
 
             Config.Save();
@@ -774,7 +810,7 @@ namespace uimanager
             if (diamondObj != null)
             {
                 diamondObj.SetActive(option);
-            }
+            }            
         }
     }    
 }
