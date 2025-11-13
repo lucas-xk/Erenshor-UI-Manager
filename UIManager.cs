@@ -524,7 +524,7 @@ namespace uimanager
 
             ApplySavedPositions();
 
-            minimapconfig.MiniMapButtonsConfig();
+            minimapconfig.MiniMapButtonsConfig();            
         }
 
         private bool IsChatOpen()
@@ -644,6 +644,11 @@ namespace uimanager
                     return;
 
                 OpenWorldMap();
+            }
+
+            if (Input.GetKeyDown(InputManager.Map) && !GameData.PlayerTyping)
+            {                
+                minimapconfig.ForceApplyZoom();
             }
         }
 

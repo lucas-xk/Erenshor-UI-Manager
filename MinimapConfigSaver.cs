@@ -105,5 +105,18 @@ namespace minimap_config_saver
                 config.Save();
             });
         }
+
+        private float memZoom;                
+
+        public void ForceApplyZoom()
+        {
+            memZoom = zoom.Value;            
+            
+            var camSizeField = typeof(Minimap).GetField("CamSize", BindingFlags.Instance | BindingFlags.NonPublic);
+            camSizeField.SetValue(minimap, memZoom);
+                        
+            var mapSizeField = typeof(Minimap).GetField("MapSize", BindingFlags.Instance | BindingFlags.NonPublic);
+            mapSizeField.SetValue(minimap, memZoom);
+        }        
     }
 }
