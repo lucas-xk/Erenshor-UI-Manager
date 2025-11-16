@@ -2,7 +2,7 @@ Erenshor UI Manager Mod
 
 This mod allows full management of the entire UI.
 
-The features from the [Clean Hotbars]([https://discord.com/channels/1099145747364057118/1378260159058411581](https://github.com/lucas-xk/Erenshor-Clean-Hotbars)) and [Remove UI Borders]([https://discord.com/channels/1099145747364057118/1436791387663106149](https://github.com/lucas-xk/Erenshor-Remove-UI-Borders)) mods have been integrated into this one. However, those standalone versions are still available for players who prefer using them separately.
+The features from the [Clean Hotbars](https://github.com/lucas-xk/Erenshor-Clean-Hotbars) and [Remove UI Borders](https://github.com/lucas-xk/Erenshor-Remove-UI-Borders) mods have been integrated into this one. However, those standalone versions are still available for players who prefer using them separately.
 
 ⚠️ **NOTE: Do not use this mod together with "Clean Hotbars" or "Remove UI Borders" to avoid conflicts, as their functionality is already included in this mod.**
 
