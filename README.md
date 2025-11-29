@@ -1,14 +1,14 @@
-Erenshor UI Manager Mod
+# Erenshor UI Manager Mod
 
-This mod allows full management of the entire UI.
+## This mod allows full management of the entire UI.
 
 The features from the [Clean Hotbars](https://github.com/lucas-xk/Erenshor-Clean-Hotbars) and [Remove UI Borders](https://github.com/lucas-xk/Erenshor-Remove-UI-Borders) mods have been integrated into this one. However, those standalone versions are still available for players who prefer using them separately.
 
 ⚠️ **NOTE: Do not use this mod together with "Clean Hotbars" or "Remove UI Borders" to avoid conflicts, as their functionality is already included in this mod.**
 
-Features:
+### Features:
 
-- UI Edit Mode (default key: F9, rebindable).
+- **UI Edit Mode** (default key: F9, rebindable).
 - Removes the black borders/lines from UI windows.
 <br>These borders only appear while in UI Edit Mode to help with alignment.
 - Removes all blue diamonds.
@@ -19,7 +19,7 @@ Features:
 - Adds hotkeys for the Group Builder and World Map buttons (default: G and N, respectively, both rebindable).
 <br>In vanilla, the World Map button loses its hotkey when the minimap is enabled via the server admin panel.
 - Buttons tooltip temporarily removed to avoid having to move it to another location if the player moves the buttons.
-- The vanilla minimap settings are now saved between sessions.
+- **The vanilla minimap settings are now saved between sessions.**
   - Zoom level
   - Lock North
   - Draw real-time geometry
