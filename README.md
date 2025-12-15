@@ -29,7 +29,7 @@ The features from the [Clean Hotbars](https://github.com/lucas-xk/Erenshor-Clean
 <br>If you want the larger version of the minimap to appear centered on the screen, use the "BigMap Position" mod.
 Download the `bigmap-position.dll` from the releases to enable this feature.
 
-How to Install:
+### How to Install:
 
 Requires BepInEx:<br>
 https://github.com/BepInEx/BepInEx
