@@ -14,12 +14,6 @@ namespace remove_ui_borders
                 borderObj.SetActive(option);
             }
 
-            borderObj = GameObject.Find("UI/UIElements/NewGroupPar/Image (4)");
-            if (borderObj != null)
-            {
-                borderObj.SetActive(option);
-            }
-
             borderObj = GameObject.Find("UI/UIElements/PlayerLifePar/Image (3)");
             if (borderObj != null)
             {
@@ -50,7 +44,7 @@ namespace remove_ui_borders
             if (borderObj != null)
             {
                 borderObj.SetActive(option);
-            }
+            }            
         }
     }
 }

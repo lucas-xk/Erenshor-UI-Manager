@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace uimanager
 {
-    [BepInPlugin("lucasxk.erenshor.uimanager", "UI Manager", "1.0.0")]
+    [BepInPlugin("lucasxk.erenshor.uimanager", "UI Manager", "1.2.0")]
 
     public class UIManager : BaseUnityPlugin
     {
@@ -23,6 +23,8 @@ namespace uimanager
         private ConfigEntry<KeyCode> toggleEditKey;
         private ConfigEntry<KeyCode> openGroup;
         private ConfigEntry<KeyCode> openWorldMap;
+        private ConfigEntry<KeyCode> openGuild;
+        private ConfigEntry<KeyCode> openGroupPlanning;
 
         private ConfigEntry<bool> disableCompass;
         private ConfigEntry<bool> disableLoc;
@@ -34,10 +36,11 @@ namespace uimanager
         private ConfigEntry<bool> disableSkillsButton;
         private ConfigEntry<bool> disableJournalButton;
         private ConfigEntry<bool> disableMapButton;
-        private ConfigEntry<bool> disableOptionsButton;
+        private ConfigEntry<bool> disableGuildManagerButton;
         private ConfigEntry<bool> disableGamepadButton;
         private ConfigEntry<bool> disableHelpButton;
         private ConfigEntry<bool> disableGroupButton;
+        private ConfigEntry<bool> disableLockUIButton;
         private ConfigEntry<bool> disableDPS;
         private ConfigEntry<bool> disableChat;
         private ConfigEntry<bool> disableChatBottom;
@@ -46,11 +49,13 @@ namespace uimanager
         private ConfigEntry<bool> disableParty;
         private ConfigEntry<bool> disablePet;
         private ConfigEntry<bool> disableBuffs;
+        private ConfigEntry<bool> disableCastBar;
         private ConfigEntry<bool> disableTarget;
         private ConfigEntry<bool> disableHP;
         private ConfigEntry<bool> disableMiniMap;
         private ConfigEntry<bool> disableMiniMapButtons;
         private ConfigEntry<bool> disableMiniMapZoneName;
+        private ConfigEntry<bool> disableCommandsCard;
 
         private ConfigEntry<Vector3> posCompass;
         private ConfigEntry<Vector3> posLoc;
@@ -59,10 +64,11 @@ namespace uimanager
         private ConfigEntry<Vector3> posSkills;
         private ConfigEntry<Vector3> posJournal;
         private ConfigEntry<Vector3> posMap;
-        private ConfigEntry<Vector3> posOptions;
+        private ConfigEntry<Vector3> posGuildManager;
         private ConfigEntry<Vector3> posGamepad;
         private ConfigEntry<Vector3> posHelp;
         private ConfigEntry<Vector3> posGroup;
+        private ConfigEntry<Vector3> posLockUI;
 
         private void Awake()
         {
@@ -75,11 +81,14 @@ namespace uimanager
             disableHotkeys = Config.Bind("Bottom Center", "Hotkeys", true, "Disables/Enables the hotkeys icons");
 
             toggleEditKey = Config.Bind("Hotkeys", "Toggle Edit Mode", KeyCode.F9, "Key to toggle UI edit mode");
-            openGroup = Config.Bind("Hotkeys", "Group Builder", KeyCode.G, "Key to open the Group Builder window");
+            openGroup = Config.Bind("Hotkeys", "Group Builder", KeyCode.F, "Key to open the Group Builder window");
             openWorldMap = Config.Bind("Hotkeys", "World Map", KeyCode.N, "Key to open the world map");
+            openGuild = Config.Bind("Hotkeys", "Guild Manager", KeyCode.G, "Key to open the Guild Manager window");
+            openGroupPlanning = Config.Bind("Hotkeys", "Group Management", KeyCode.T, "Key to open the Group Management window");
 
             disableCompass = Config.Bind("Top Center", "Compass", true, "Disables/Enables the compass");
             disableLoc = Config.Bind("Top Center", "Coordinates", true, "Disables/Enables the coordinates");
+            disableCastBar = Config.Bind("Top Center", "Cast Bar", true, "Disables/Enables the cast bar");
             disableTarget = Config.Bind("Top Center", "Target", true, "Disables/Enables the target window");
 
             disableMenuButton = Config.Bind("Top Right Menu", "Menu", true, "Disables/Enables the Menu button");
@@ -87,10 +96,11 @@ namespace uimanager
             disableSkillsButton = Config.Bind("Top Right Menu", "Spells & Skills", true, "Disables/Enables the Spells & Skills button");
             disableJournalButton = Config.Bind("Top Right Menu", "Journal", true, "Disables/Enables the Journal button");
             disableMapButton = Config.Bind("Top Right Menu", "Map", true, "Disables/Enables the Map button");
-            disableOptionsButton = Config.Bind("Top Right Menu", "Options", true, "Disables/Enables the Options button");
+            disableGuildManagerButton = Config.Bind("Top Right Menu", "Guild Manager", true, "Disables/Enables the Guild Manager button");
             disableGamepadButton = Config.Bind("Top Right Menu", "Gamepad", true, "Disables/Enables the Gamepad button");
             disableHelpButton = Config.Bind("Top Right Menu", "Help", true, "Disables/Enables the Help button");
             disableGroupButton = Config.Bind("Top Right Menu", "Group Builder", true, "Disables/Enables the Group Builder button");
+            disableLockUIButton = Config.Bind("Top Right Menu", "Lock UI", true, "Disables/Enables the Lock UI button");
 
             disableDPS = Config.Bind("Right", "DPS Meters", true, "Disables/Enables the DPS meters");
             disableCombatLogBottom = Config.Bind("Right", "Combat Log (bottom)", true, "Disables/Enables the just the bottom of the combat log window");
@@ -101,6 +111,7 @@ namespace uimanager
             disableParty = Config.Bind("Left", "Party Window", true, "Disables/Enables the party window");
             disablePet = Config.Bind("Left", "Pet Window", true, "Disables/Enables the pet window");
             disableHP = Config.Bind("Left", "Player HP/Mana window", true, "Disables/Enables the player HP/Mana window");
+            disableCommandsCard = Config.Bind("Left", "Group Commands Card", true, "Disables/Enables the Group Commands Card");
 
             disableXPBar = Config.Bind("Bottom Center", "XP Bar", true, "Disables/Enables the XP bar");
             disableHotbarIcon = Config.Bind("Bottom Center", "Second hotbar icon", true, "Disables/Enables the second hotbar icon");
@@ -118,25 +129,28 @@ namespace uimanager
             posSkills = Config.Bind("Objects Position", "Skills Button", new Vector3(768.627f, 511f, 0));
             posJournal = Config.Bind("Objects Position", "Journal Button", new Vector3(716.468f, 511f, 0));
             posMap = Config.Bind("Objects Position", "Map Button", new Vector3(558.05f, 511f, 0));
-            posOptions = Config.Bind("Objects Position", "Options Button", new Vector3(873.7f, 511f, 0));
+            posGuildManager = Config.Bind("Objects Position", "Guild Manager Button", new Vector3(873.7f, 511f, 0));
             posGamepad = Config.Bind("Objects Position", "Gamepad Button", new Vector3(609.87f, 511f, 0));
             posHelp = Config.Bind("Objects Position", "Help Button", new Vector3(662.37f, 511f, 0));
             posGroup = Config.Bind("Objects Position", "Group Builder Button", new Vector3(503.876f, 511f, 0));
+            posLockUI = Config.Bind("Objects Position", "Lock UI Button", new Vector3(449.1586f, 511f, 0));
 
             disableHotkeys.SettingChanged += (_, __) => cleanhotbars.SetOption(disableHotkeys.Value);
 
             disableCompass.SettingChanged += (_, __) => UpdateCompass();
             disableLoc.SettingChanged += (_, __) => UpdateLoc();
+            disableCastBar.SettingChanged += (_, __) => UpdateCastBar();
             disableTarget.SettingChanged += (_, __) => UpdateTarget();
             disableMenuButton.SettingChanged += (_, __) => UpdateMenu();
             disableInventoryButton.SettingChanged += (_, __) => UpdateInventory();
             disableSkillsButton.SettingChanged += (_, __) => UpdateSkills();
             disableJournalButton.SettingChanged += (_, __) => UpdateJournal();
             disableMapButton.SettingChanged += (_, __) => UpdateMap();
-            disableOptionsButton.SettingChanged += (_, __) => UpdateOptions();
+            disableGuildManagerButton.SettingChanged += (_, __) => UpdateGuildManager();
             disableGamepadButton.SettingChanged += (_, __) => UpdateGamepad();
             disableHelpButton.SettingChanged += (_, __) => UpdateHelp();
             disableGroupButton.SettingChanged += (_, __) => UpdateGroup();
+            disableLockUIButton.SettingChanged += (_, __) => UpdateLockUI();
             disableDPS.SettingChanged += (_, __) => UpdateDPS();
             disableCombatLogBottom.SettingChanged += (_, __) => UpdateCombatBottom();
             disableCombatLog.SettingChanged += (_, __) => UpdateCombat();
@@ -145,6 +159,7 @@ namespace uimanager
             disableParty.SettingChanged += (_, __) => UpdateParty();
             disablePet.SettingChanged += (_, __) => UpdatePet();
             disableHP.SettingChanged += (_, __) => UpdateHP();
+            disableCommandsCard.SettingChanged += (_, __) => UpdateCommandsCard();
             disableXPBar.SettingChanged += (_, __) => UpdateXPBar();
             disableHotbarIcon.SettingChanged += (_, __) => UpdateHotbarIcon();
             disableHotbar.SettingChanged += (_, __) => UpdateHotbar();
@@ -161,10 +176,11 @@ namespace uimanager
             posSkills.SettingChanged += (_, __) => ApplyPosition("SpellsButton", posSkills.Value);
             posJournal.SettingChanged += (_, __) => ApplyPosition("JournalButton", posJournal.Value);
             posMap.SettingChanged += (_, __) => ApplyPosition("WorldMapButton", posMap.Value);
-            posOptions.SettingChanged += (_, __) => ApplyPosition("SettingsButton", posOptions.Value);
+            posGuildManager.SettingChanged += (_, __) => ApplyPosition("SettingsButton", posGuildManager.Value);
             posGamepad.SettingChanged += (_, __) => ApplyPosition("ToggleGamepad", posGamepad.Value);
             posHelp.SettingChanged += (_, __) => ApplyPosition("HelpButton", posHelp.Value);
             posGroup.SettingChanged += (_, __) => ApplyPosition("GroupBuilder", posGroup.Value);
+            posLockUI.SettingChanged += (_, __) => ApplyPosition("UIToggle", posLockUI.Value);
         }
 
         private void DisableDescription()
@@ -179,7 +195,7 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/RadioButtonPar/DragButtons");
             if (Obj != null)
                 Obj.SetActive(false);
-        }        
+        }
 
         private void UpdateCompass()
         {
@@ -193,6 +209,13 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/Canvas/Loc");
             if (Obj != null)
                 Obj.SetActive(disableLoc.Value);
+        }
+
+        private void UpdateCastBar()
+        {
+            var Obj = GameObject.Find("UI/CastBarPar");
+            if (Obj != null)
+                Obj.SetActive(disableCastBar.Value);
         }
 
         private void UpdateTarget()
@@ -237,11 +260,11 @@ namespace uimanager
                 Obj.SetActive(disableMapButton.Value);
         }
 
-        private void UpdateOptions()
+        private void UpdateGuildManager()
         {
             var Obj = GameObject.Find("UI/UIElements/SettingsButton");
             if (Obj != null)
-                Obj.SetActive(disableOptionsButton.Value);
+                Obj.SetActive(disableGuildManagerButton.Value);
         }
 
         private void UpdateGamepad()
@@ -263,6 +286,13 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/GroupBuilder");
             if (Obj != null)
                 Obj.SetActive(disableGroupButton.Value);
+        }
+
+        private void UpdateLockUI()
+        {
+            var Obj = GameObject.Find("UI/UIElements/UIToggle");
+            if (Obj != null)
+                Obj.SetActive(disableLockUIButton.Value);
         }
 
         private void UpdateDPS()
@@ -349,6 +379,56 @@ namespace uimanager
                 Obj.SetActive(disableHP.Value);
         }
 
+        private void UpdateCommandsCard()
+        {
+            var Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Pull");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Autopull");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Atk");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Asst");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Follow");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Wait");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Manage");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Flee");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Invis");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Hotkeys/Image");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
+            for (int i = 1; i <= 15 ; i++)
+            {
+                Obj = GameObject.Find($"UI/UIElements/NewGroupPar/GroupCommands(1)/Hotkeys/Image ({i})");
+                if (Obj != null)
+                    Obj.SetActive(disableCommandsCard.Value);
+            }
+        }
+
         private void UpdateXPBar()
         {
             var Obj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Vitals");
@@ -423,10 +503,11 @@ namespace uimanager
             SetLocalPosition("UI/UIElements/SpellsButton", posSkills.Value);
             SetLocalPosition("UI/UIElements/JournalButton", posJournal.Value);
             SetLocalPosition("UI/UIElements/WorldMapButton", posMap.Value);
-            SetLocalPosition("UI/UIElements/SettingsButton", posOptions.Value);
+            SetLocalPosition("UI/UIElements/SettingsButton", posGuildManager.Value);
             SetLocalPosition("UI/UIElements/ToggleGamepad", posGamepad.Value);
             SetLocalPosition("UI/UIElements/HelpButton", posHelp.Value);
             SetLocalPosition("UI/UIElements/GroupBuilder", posGroup.Value);
+            SetLocalPosition("UI/UIElements/UIToggle", posLockUI.Value);
         }
 
         private void SetLocalPosition(string path, Vector3 pos)
@@ -447,10 +528,11 @@ namespace uimanager
             posSkills.Value = new Vector3(768.627f, 511f, 0);
             posJournal.Value = new Vector3(716.468f, 511f, 0);
             posMap.Value = new Vector3(558.05f, 511f, 0);
-            posOptions.Value = new Vector3(873.7f, 511f, 0);
+            posGuildManager.Value = new Vector3(873.7f, 511f, 0);
             posGamepad.Value = new Vector3(609.87f, 511f, 0);
             posHelp.Value = new Vector3(662.37f, 511f, 0);
             posGroup.Value = new Vector3(503.876f, 511f, 0);
+            posLockUI.Value = new Vector3(449.1586f, 511f, 0);
 
             Config.Save();
             ApplySavedPositions();
@@ -483,29 +565,27 @@ namespace uimanager
 
             removeborders.DisableBorders(false);
 
-
-
             DisableDescription();
             DisableButtonsDiamond();
             ReparentButtons();
             PlaceObjectsUnderInventory();
 
-            DiamondsToggle(false);
-
             cleanhotbars.SetOption(disableHotkeys.Value);
 
             UpdateCompass();
             UpdateLoc();
+            UpdateCastBar();
             UpdateTarget();
             UpdateMenu();
             UpdateInventory();
             UpdateSkills();
             UpdateJournal();
             UpdateMap();
-            UpdateOptions();
+            UpdateGuildManager();
             UpdateGamepad();
             UpdateHelp();
             UpdateGroup();
+            UpdateLockUI();
             UpdateDPS();
             UpdateCombatBottom();
             UpdateCombat();
@@ -514,6 +594,7 @@ namespace uimanager
             UpdateParty();
             UpdatePet();
             UpdateHP();
+            UpdateCommandsCard();
             UpdateXPBar();
             UpdateHotbarIcon();
             UpdateHotbar();
@@ -524,7 +605,9 @@ namespace uimanager
 
             ApplySavedPositions();
 
-            minimapconfig.MiniMapButtonsConfig();            
+            minimapconfig.MiniMapButtonsConfig();
+
+            EditModeToggle();
         }
 
         private bool IsChatOpen()
@@ -568,7 +651,8 @@ namespace uimanager
                 "UI/UIElements/RadioButtonPar/SettingsButton",
                 "UI/UIElements/RadioButtonPar/ToggleGamepad",
                 "UI/UIElements/RadioButtonPar/HelpButton",
-                "UI/UIElements/RadioButtonPar/GroupBuilder"
+                "UI/UIElements/RadioButtonPar/GroupBuilder",
+                "UI/UIElements/RadioButtonPar/UIToggle"
             };            
 
             foreach (var path in objectsToMove)
@@ -596,7 +680,8 @@ namespace uimanager
                 "UI/UIElements/SettingsButton",
                 "UI/UIElements/ToggleGamepad",
                 "UI/UIElements/HelpButton",
-                "UI/UIElements/GroupBuilder"
+                "UI/UIElements/GroupBuilder",
+                "UI/UIElements/UIToggle"
             };
 
             int invIndex = inventoryObj.transform.GetSiblingIndex();
@@ -618,14 +703,17 @@ namespace uimanager
                 if (IsChatOpen() || IsAHTyping())
                     return;
 
-                editMode = !editMode;
-                SetEditMode(editMode);
-                DiamondsToggle(editMode);
-                if (removeborders != null)
+                var vanillaToggleButtonObj = GameObject.Find("UI/UIElements/UIToggle");
+
+                if (vanillaToggleButtonObj != null)
                 {
-                    removeborders.DisableBorders(editMode);
+                    var vanillaToggleButtonComp = vanillaToggleButtonObj.GetComponent<UnityEngine.UI.Button>();
+                    if (vanillaToggleButtonComp != null)
+                    {
+                        vanillaToggleButtonComp.onClick.Invoke();
+                    }
                 }
-            }            
+            }
 
             if (editMode)
                 HandleDragging();
@@ -646,9 +734,45 @@ namespace uimanager
                 OpenWorldMap();
             }
 
+            if (Input.GetKeyDown(openGuild.Value))
+            {
+                if (IsChatOpen() || IsAHTyping())
+                    return;
+
+                OpenGuildManager();
+            }
+
+            if (Input.GetKeyDown(openGroupPlanning.Value))
+            {
+                if (IsChatOpen() || IsAHTyping())
+                    return;
+
+                OpenGroupPlanning();
+            }
+
             if (Input.GetKeyDown(InputManager.Map) && !GameData.PlayerTyping)
             {                
                 minimapconfig.ForceApplyZoom();
+            }
+        }
+
+        private void EditModeToggle()
+        {
+            GameObject vanillaToggleButtonObj = GameObject.Find("UI/UIElements/UIToggle");
+            if (vanillaToggleButtonObj != null)
+            {
+                UnityEngine.UI.Button vanillaToggleButtonComp = vanillaToggleButtonObj.GetComponent<UnityEngine.UI.Button>();
+                if (vanillaToggleButtonComp != null)
+                {
+                    vanillaToggleButtonComp.onClick.AddListener(() => {
+                        editMode = !editMode;
+                        SetEditMode(editMode);
+                        if (removeborders != null)
+                        {
+                            removeborders.DisableBorders(editMode);
+                        }
+                    });
+                }
             }
         }
 
@@ -664,7 +788,21 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/Map");
             if (Obj != null)
                 Obj.SetActive(!Obj.activeSelf);
-        }        
+        }
+
+        private void OpenGuildManager()
+        {
+            var Obj = GameObject.Find("UI/UIElements/GuildPar/GuildManager");
+            if (Obj != null)
+                Obj.SetActive(!Obj.activeSelf);
+        }
+
+        private void OpenGroupPlanning()
+        {
+            var Obj = GameObject.Find("UI/UIElements/Group Planning");
+            if (Obj != null)
+                Obj.SetActive(!Obj.activeSelf);
+        }
 
         private List<string> draggableObjectsPaths = new List<string>()
         {
@@ -679,6 +817,7 @@ namespace uimanager
             "UI/UIElements/ToggleGamepad",
             "UI/UIElements/HelpButton",
             "UI/UIElements/GroupBuilder",
+            "UI/UIElements/UIToggle",
         };
 
         private void SetEditMode(bool enable)
@@ -692,8 +831,25 @@ namespace uimanager
                     if (canvasGroup == null)
                         canvasGroup = obj.AddComponent<CanvasGroup>();
 
-                    canvasGroup.alpha = enable ? 0.5f : 1f; // 50% tranparency
-                    canvasGroup.blocksRaycasts = !enable; // cannot click on buttons
+                    if (path == "UI/UIElements/UIToggle")
+                    {
+                        //canvasGroup.alpha = 1f;
+                        canvasGroup.blocksRaycasts = true;
+
+                        var outline = obj.GetComponent<UnityEngine.UI.Outline>();
+                        if (outline == null)
+                            outline = obj.AddComponent<UnityEngine.UI.Outline>();
+
+                        outline.effectColor = new Color(1f, 0.85f, 0f, 1f); // golden color (r, g, b, a)
+                        outline.effectDistance = new Vector2(2f, 2f); // thickness
+
+                        outline.enabled = enable;
+                    }
+                    else
+                    {
+                        canvasGroup.alpha = enable ? 0.5f : 1f; // 50% tranparency                    
+                        canvasGroup.blocksRaycasts = !enable; // cannot click on buttons
+                    }                        
                 }
             }
         }
@@ -746,76 +902,14 @@ namespace uimanager
                 case "SpellsButton": posSkills.Value = localPos; break;
                 case "JournalButton": posJournal.Value = localPos; break;
                 case "WorldMapButton": posMap.Value = localPos; break;
-                case "SettingsButton": posOptions.Value = localPos; break;
+                case "SettingsButton": posGuildManager.Value = localPos; break;
                 case "ToggleGamepad": posGamepad.Value = localPos; break;
                 case "HelpButton": posHelp.Value = localPos; break;
                 case "GroupBuilder": posGroup.Value = localPos; break;
+                case "UIToggle": posLockUI.Value = localPos; break;
             }
 
             Config.Save();
         }
-
-        private void DiamondsToggle(bool option)
-        {
-            var diamondObj = GameObject.Find("UI/UIElements/TargCanv/NewTargetWindow/DRAGTAR");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/DPSMeters/DPSPAR/DRAGDPS");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/CombatLogPar/CombatPar/CombatWindow/DragCombat");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/LogCanvas/ChatPar/DragChat");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/NewGroupPar/Drag Group");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/CharmedPar/CharmedNPC/DRAGPET");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/PlayerLifePar/DragLife");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/DragHotbar");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/UIElements/Canvas/StatusPar/DragStatusEffects");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }
-
-            diamondObj = GameObject.Find("UI/MAP PAR/MapBG/DRAGMAP");
-            if (diamondObj != null)
-            {
-                diamondObj.SetActive(option);
-            }            
-        }
-    }    
+    }
 }
