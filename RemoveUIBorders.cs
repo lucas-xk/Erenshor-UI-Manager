@@ -8,7 +8,7 @@ namespace remove_ui_borders
         
         public void DisableBorders(bool option)
         {
-            var borderObj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Image (1)");
+            var borderObj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/DragHotbar/Image (1)");
             if (borderObj != null)
             {
                 borderObj.SetActive(option);
