@@ -8,15 +8,19 @@ The features from the [Clean Hotbars](https://github.com/lucas-xk/Erenshor-Clean
 
 ### Features:
 
+⚠️ **NOTE: Check the [releases page](https://github.com/lucas-xk/Erenshor-UI-Manager/releases) for the full list of updated features.**
+
 - **UI Edit Mode** (default key: F9, rebindable).
 - Removes the black borders/lines from UI windows.
 <br>These borders only appear while in UI Edit Mode to help with alignment.
-- Removes all blue diamonds.
 <br>They also only appear in UI Edit Mode.
 - Allows dragging all UI elements.
 - Allows resetting dragged elements back to the game’s default positions.
 - Allows hiding any UI element or window.
-- Adds hotkeys for the Group Builder and World Map buttons (default: G and N, respectively, both rebindable).
+- Adds hotkeys for the Group Builder (default: F, rebindable).
+- Adds hotkeys for the World Map (default: N, rebindable).
+- Adds hotkeys for the Guild Manager (default: G, rebindable).
+- Adds hotkeys for the Group Management Window (default: T, rebindable).
 <br>In vanilla, the World Map button loses its hotkey when the minimap is enabled via the server admin panel.
 - Buttons tooltip temporarily removed to avoid having to move it to another location if the player moves the buttons.
 - **The vanilla minimap settings are now saved between sessions.**
