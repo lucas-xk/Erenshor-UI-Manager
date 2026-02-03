@@ -610,28 +610,6 @@ namespace uimanager
             EditModeToggle();
         }
 
-        private bool IsChatOpen()
-        {
-            var chatInput = GameObject.Find("UI/UIElements/LogCanvas/ChatPar/InputBox");
-            if (chatInput == null)
-                return false;
-
-            return chatInput.activeInHierarchy;
-        }
-
-        private bool IsAHTyping()
-        {
-            var inputObj = GameObject.Find("UI/UIElements/MarketPar/NewAH/InfoBG/AHSearch");
-            if (inputObj == null)
-                return false;
-
-            var inputField = inputObj.GetComponent<TMP_InputField>();
-            if (inputField == null)
-                return false;
-
-            return inputField.isFocused;
-        }
-
         private bool editMode = false;
         private GameObject draggingObj;
         private Vector3 offset;
@@ -698,11 +676,8 @@ namespace uimanager
 
         private void Update()
         {
-            if (Input.GetKeyDown(toggleEditKey.Value))
+            if (Input.GetKeyDown(toggleEditKey.Value) && !GameData.PlayerTyping)
             {
-                if (IsChatOpen() || IsAHTyping())
-                    return;
-
                 var vanillaToggleButtonObj = GameObject.Find("UI/UIElements/UIToggle");
 
                 if (vanillaToggleButtonObj != null)
@@ -718,35 +693,23 @@ namespace uimanager
             if (editMode)
                 HandleDragging();
 
-            if (Input.GetKeyDown(openGroup.Value))
+            if (Input.GetKeyDown(openGroup.Value) && !GameData.PlayerTyping)
             {
-                if (IsChatOpen() || IsAHTyping())
-                    return;
-
                 OpenGroupBuilder();
             }
 
-            if (Input.GetKeyDown(openWorldMap.Value))
+            if (Input.GetKeyDown(openWorldMap.Value) && !GameData.PlayerTyping)
             {
-                if (IsChatOpen() || IsAHTyping())
-                    return;
-
                 OpenWorldMap();
             }
 
-            if (Input.GetKeyDown(openGuild.Value))
+            if (Input.GetKeyDown(openGuild.Value) && !GameData.PlayerTyping)
             {
-                if (IsChatOpen() || IsAHTyping())
-                    return;
-
                 OpenGuildManager();
             }
 
-            if (Input.GetKeyDown(openGroupPlanning.Value))
+            if (Input.GetKeyDown(openGroupPlanning.Value) && !GameData.PlayerTyping)
             {
-                if (IsChatOpen() || IsAHTyping())
-                    return;
-
                 OpenGroupPlanning();
             }
 
