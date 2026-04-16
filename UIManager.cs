@@ -52,6 +52,7 @@ namespace uimanager
         private ConfigEntry<bool> disableMiniMapButtons;
         private ConfigEntry<bool> disableMiniMapZoneName;
         private ConfigEntry<bool> disableCommandsCard;
+        private ConfigEntry<bool> disableChat;
 
         private ConfigEntry<Vector3> posCompass;
         private ConfigEntry<Vector3> posLoc;
@@ -119,6 +120,7 @@ namespace uimanager
             disablePet = Config.Bind("Left", "Pet Window", true, "Disables/Enables the pet window");
             disableHP = Config.Bind("Left", "Player HP/Mana window", true, "Disables/Enables the player HP/Mana window");
             disableCommandsCard = Config.Bind("Left", "Group Commands Card", true, "Disables/Enables the Group Commands Card");
+            disableChat = Config.Bind("Left", "Chat", true, "Disables/Enables the Chat Box");
 
             disableXPBar = Config.Bind("Bottom Center", "XP Bar", true, "Disables/Enables the XP bar");
             disableHotbarIcon = Config.Bind("Bottom Center", "Second hotbar icon", true, "Disables/Enables the second hotbar icon");
@@ -179,6 +181,7 @@ namespace uimanager
             disablePet.SettingChanged += (_, __) => UpdatePet();
             disableHP.SettingChanged += (_, __) => UpdateHP();
             disableCommandsCard.SettingChanged += (_, __) => UpdateCommandsCard();
+            disableChat.SettingChanged += (_, __) => UpdateChat();
             disableXPBar.SettingChanged += (_, __) => UpdateXPBar();
             disableHotbarIcon.SettingChanged += (_, __) => UpdateHotbarIcon();
             disableHotbar.SettingChanged += (_, __) => UpdateHotbar();
@@ -426,6 +429,13 @@ namespace uimanager
             }
         }
 
+        private void UpdateChat()
+        {
+            var Obj = GameObject.Find("UI/UIElements/LogCanvas");
+            if (Obj != null)
+                Obj.SetActive(disableChat.Value);
+        }
+
         private void UpdateXPBar()
         {
             var Obj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Vitals");
@@ -607,6 +617,7 @@ namespace uimanager
             UpdatePet();
             UpdateHP();
             UpdateCommandsCard();
+            UpdateChat();
             UpdateXPBar();
             UpdateHotbarIcon();
             UpdateHotbar();
