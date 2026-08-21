@@ -26,25 +26,7 @@ namespace remove_ui_borders
                 var borderComp = borderObj.GetComponent<Image>();
                 if (borderComp != null)
                     borderComp.enabled = option;
-            }
-
-            borderObj = GameObject.Find("UI/UIElements/TargCanv/NewTargetWindow/Image (1)");
-            if (borderObj != null)
-            {
-                borderObj.SetActive(option);
-            }
-
-            borderObj = GameObject.Find("UI/UIElements/TargCanv/NewTargetWindow/LifeNumBG (1)");
-            if (borderObj != null)
-            {
-                borderObj.SetActive(option);
-            }
-
-            borderObj = GameObject.Find("UI/UIElements/TargCanv/NewTargetWindow/Image");
-            if (borderObj != null)
-            {
-                borderObj.SetActive(option);
-            }            
+            }        
         }
     }
 }

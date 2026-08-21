@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace uimanager
 {
-    [BepInPlugin("lucasxk.erenshor.uimanager", "UI Manager", "1.3.0")]
+    [BepInPlugin("lucasxk.erenshor.uimanager", "UI Manager", "1.4.0")]
 
     public class UIManager : BaseUnityPlugin
     {
@@ -24,9 +24,12 @@ namespace uimanager
         private ConfigEntry<KeyCode> openGroup;
         private ConfigEntry<KeyCode> openWorldMap;
         private ConfigEntry<KeyCode> openGroupPlanning;
+        private ConfigEntry<KeyCode> openChatBoxManager;
+        private ConfigEntry<KeyCode> openLootDistribution;
 
         private ConfigEntry<bool> disableCompass;
         private ConfigEntry<bool> disableLoc;
+        private ConfigEntry<bool> disableTreasureLoc;
         private ConfigEntry<bool> disableXPBar;
         private ConfigEntry<bool> disableHotbarIcon;
         private ConfigEntry<bool> disableHotbar;
@@ -56,6 +59,7 @@ namespace uimanager
 
         private ConfigEntry<Vector3> posCompass;
         private ConfigEntry<Vector3> posLoc;
+        private ConfigEntry<Vector3> posTreasureLoc;
         private ConfigEntry<Vector3> posMenu;
         private ConfigEntry<Vector3> posInventory;
         private ConfigEntry<Vector3> posSkills;
@@ -70,6 +74,7 @@ namespace uimanager
 
         private ConfigEntry<Vector3> scaleCompass;
         private ConfigEntry<Vector3> scaleLoc;
+        private ConfigEntry<Vector3> scaleTreasureLoc;
         private ConfigEntry<Vector3> scaleMenu;
         private ConfigEntry<Vector3> scaleInventory;
         private ConfigEntry<Vector3> scaleSkills;
@@ -96,9 +101,12 @@ namespace uimanager
             openGroup = Config.Bind("Hotkeys", "Group Builder", KeyCode.F, "Key to open the Group Builder window");
             openWorldMap = Config.Bind("Hotkeys", "World Map", KeyCode.N, "Key to open the world map");
             openGroupPlanning = Config.Bind("Hotkeys", "Group Management", KeyCode.T, "Key to open the Group Management window");
+            openChatBoxManager = Config.Bind("Hotkeys", "Chat Box Manager", KeyCode.Y, "Key to open the Chat Box Manager window");
+            openLootDistribution = Config.Bind("Hotkeys", "Loot distribution", KeyCode.L, "Key to open the Loot distribution window");
 
             disableCompass = Config.Bind("Top Center", "Compass", true, "Disables/Enables the compass");
             disableLoc = Config.Bind("Top Center", "Coordinates", true, "Disables/Enables the coordinates");
+            disableTreasureLoc = Config.Bind("Top Center", "Treasure coordinates", true, "Disables/Enables the treasure coordinates");
             disableCastBar = Config.Bind("Top Center", "Cast Bar", true, "Disables/Enables the cast bar");
             disableTarget = Config.Bind("Top Center", "Target", true, "Disables/Enables the target window");
 
@@ -133,6 +141,7 @@ namespace uimanager
 
             posCompass = Config.Bind("Objects Position", "Compass", new Vector3(-307.3f, 900.1f, 0));
             posLoc = Config.Bind("Objects Position", "Coordinates", new Vector3(-306.6f, 896.5f, 0));
+            posTreasureLoc = Config.Bind("Objects Position", "Treasure coordinates", new Vector3(-333.7f, 861.9f, 0));
             posMenu = Config.Bind("Objects Position", "Menu Button", new Vector3(925.988f, 511f, 0));
             posInventory = Config.Bind("Objects Position", "Inventory Button", new Vector3(820.927f, 511f, 0));
             posSkills = Config.Bind("Objects Position", "Skills Button", new Vector3(768.627f, 511f, 0));
@@ -147,6 +156,7 @@ namespace uimanager
 
             scaleCompass = Config.Bind("Objects Scale", "Compass", new Vector3(0.5342f, 0.8209f, 1f));
             scaleLoc = Config.Bind("Objects Scale", "Coordinates", Vector3.one);
+            scaleTreasureLoc = Config.Bind("Objects Scale", "Treasure coordinates", Vector3.one);
             scaleMenu = Config.Bind("Objects Scale", "Menu Button", Vector3.one);
             scaleInventory = Config.Bind("Objects Scale", "Inventory Button", Vector3.one);
             scaleSkills = Config.Bind("Objects Scale", "Skills Button", Vector3.one);
@@ -163,6 +173,7 @@ namespace uimanager
 
             disableCompass.SettingChanged += (_, __) => UpdateCompass();
             disableLoc.SettingChanged += (_, __) => UpdateLoc();
+            disableTreasureLoc.SettingChanged += (_, __) => UpdateTreasureLoc();
             disableCastBar.SettingChanged += (_, __) => UpdateCastBar();
             disableTarget.SettingChanged += (_, __) => UpdateTarget();
             disableMenuButton.SettingChanged += (_, __) => UpdateMenu();
@@ -193,6 +204,7 @@ namespace uimanager
 
             posCompass.SettingChanged += (_, __) => ApplyPosition("CompassBarProLinear", posCompass.Value);
             posLoc.SettingChanged += (_, __) => ApplyPosition("Loc", posLoc.Value);
+            posTreasureLoc.SettingChanged += (_, __) => ApplyPosition("Treasure", posTreasureLoc.Value);
             posMenu.SettingChanged += (_, __) => ApplyPosition("MenuButton (1)", posMenu.Value);
             posInventory.SettingChanged += (_, __) => ApplyPosition("InvButton", posInventory.Value);
             posSkills.SettingChanged += (_, __) => ApplyPosition("SpellsButton", posSkills.Value);
@@ -207,6 +219,7 @@ namespace uimanager
 
             scaleCompass.SettingChanged += (_, __) => ApplyScale("CompassBarProLinear", scaleCompass.Value);
             scaleLoc.SettingChanged += (_, __) => ApplyScale("Loc", scaleLoc.Value);
+            scaleTreasureLoc.SettingChanged += (_, __) => ApplyScale("Treasure", scaleTreasureLoc.Value);
             scaleMenu.SettingChanged += (_, __) => ApplyScale("MenuButton (1)", scaleMenu.Value);
             scaleInventory.SettingChanged += (_, __) => ApplyScale("InvButton", scaleInventory.Value);
             scaleSkills.SettingChanged += (_, __) => ApplyScale("SpellsButton", scaleSkills.Value);
@@ -246,6 +259,13 @@ namespace uimanager
             var Obj = GameObject.Find("UI/UIElements/Canvas/Loc");
             if (Obj != null)
                 Obj.SetActive(disableLoc.Value);
+        }
+
+        private void UpdateTreasureLoc()
+        {
+            var Obj = GameObject.Find("UI/UIElements/Canvas/Treasure");
+            if (Obj != null)
+                Obj.SetActive(disableTreasureLoc.Value);
         }
 
         private void UpdateCastBar()
@@ -417,6 +437,10 @@ namespace uimanager
             if (Obj != null)
                 Obj.SetActive(disableCommandsCard.Value);
 
+            Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/DoLoot");
+            if (Obj != null)
+                Obj.SetActive(disableCommandsCard.Value);
+
             Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/Hotkeys/Image");
             if (Obj != null)
                 Obj.SetActive(disableCommandsCard.Value);
@@ -428,7 +452,7 @@ namespace uimanager
                     Obj.SetActive(disableCommandsCard.Value);
             }
         }
-
+        
         private void UpdateChat()
         {
             var Obj = GameObject.Find("UI/UIElements/LogCanvas");
@@ -438,9 +462,13 @@ namespace uimanager
 
         private void UpdateXPBar()
         {
-            var Obj = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Vitals");
-            if (Obj != null)
-                Obj.SetActive(disableXPBar.Value);
+            var Obj1 = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Vitals/XPBG");
+            if (Obj1 != null)
+                Obj1.SetActive(disableXPBar.Value);
+
+            var Obj2 = GameObject.Find("UI/UIElements/Canvas/HotbarPar/Vitals/XPPct");
+            if (Obj2 != null)
+                Obj2.SetActive(disableXPBar.Value);
         }
 
         private void UpdateHotbarIcon()
@@ -509,6 +537,7 @@ namespace uimanager
         {
             SetLocalPosition("UI/UIElements/Canvas/CompassBarProLinear", posCompass.Value);
             SetLocalPosition("UI/UIElements/Canvas/Loc", posLoc.Value);
+            SetLocalPosition("UI/UIElements/Canvas/Treasure", posTreasureLoc.Value);
             SetLocalPosition("UI/UIElements/MenuButton (1)", posMenu.Value);
             SetLocalPosition("UI/UIElements/InvButton", posInventory.Value);
             SetLocalPosition("UI/UIElements/SpellsButton", posSkills.Value);
@@ -534,7 +563,7 @@ namespace uimanager
         private void ApplyPosition(string objName, Vector3 pos)
         {
             GameObject obj;
-            if (objName == "CompassBarProLinear" || objName == "Loc")
+            if (objName == "CompassBarProLinear" || objName == "Loc" || objName == "Treasure")
                 obj = GameObject.Find($"UI/UIElements/Canvas/{objName}");
             else
                 obj = GameObject.Find($"UI/UIElements/{objName}");
@@ -546,6 +575,7 @@ namespace uimanager
         {
             SetLocalScale("UI/UIElements/Canvas/CompassBarProLinear", scaleCompass.Value);
             SetLocalScale("UI/UIElements/Canvas/Loc", scaleLoc.Value);
+            SetLocalScale("UI/UIElements/Canvas/Treasure", scaleTreasureLoc.Value);
             SetLocalScale("UI/UIElements/MenuButton (1)", scaleMenu.Value);
             SetLocalScale("UI/UIElements/InvButton", scaleInventory.Value);
             SetLocalScale("UI/UIElements/SpellsButton", scaleSkills.Value);
@@ -568,7 +598,7 @@ namespace uimanager
         private void ApplyScale(string objName, Vector3 scale)
         {
             GameObject obj;
-            if (objName == "CompassBarProLinear" || objName == "Loc")
+            if (objName == "CompassBarProLinear" || objName == "Loc" || objName == "Treasure")
                 obj = GameObject.Find($"UI/UIElements/Canvas/{objName}");
             else
                 obj = GameObject.Find($"UI/UIElements/{objName}");
@@ -600,6 +630,7 @@ namespace uimanager
 
             UpdateCompass();
             UpdateLoc();
+            UpdateTreasureLoc();
             UpdateCastBar();
             UpdateTarget();
             UpdateMenu();
@@ -610,6 +641,7 @@ namespace uimanager
             UpdateGuildManager();
             UpdateGamepad();
             UpdateHelp();
+            UpdateGroup();
             UpdateLockUI();
             UpdateChatBox();
             UpdateDPS();
@@ -631,13 +663,17 @@ namespace uimanager
 
             minimapconfig.MiniMapButtonsConfig();
 
-            EditModeToggle();
+            editMode = false;
+            SetEditMode(false);
         }
 
         private bool editMode = false;
         private GameObject draggingObj;
         private Vector3 offset;
-        
+
+        private UnityEngine.UI.Button currentVanillaToggleButton;
+        private bool vanillaToggleListenerAdded = false;
+
         private void ReparentButtons()
         {
             GameObject UIElementsObj = GameObject.Find("UI/UIElements");
@@ -702,6 +738,8 @@ namespace uimanager
 
         private void Update()
         {
+            EditModeToggle();
+
             if (Input.GetKeyDown(toggleEditKey.Value) && !GameData.PlayerTyping)
             {
                 var vanillaToggleButtonObj = GameObject.Find("UI/UIElements/UIToggle");
@@ -734,6 +772,16 @@ namespace uimanager
                 OpenGroupPlanning();
             }
 
+            if (Input.GetKeyDown(openChatBoxManager.Value) && !GameData.PlayerTyping)
+            {
+                OpenChatBoxManager();
+            }
+
+            if (Input.GetKeyDown(openLootDistribution.Value) && !GameData.PlayerTyping)
+            {
+                OpenLootDistribution();
+            }
+
             if (Input.GetKeyDown(InputManager.Map) && !GameData.PlayerTyping)
             {                
                 minimapconfig.ForceApplyZoom();
@@ -743,20 +791,39 @@ namespace uimanager
         private void EditModeToggle()
         {
             GameObject vanillaToggleButtonObj = GameObject.Find("UI/UIElements/UIToggle");
-            if (vanillaToggleButtonObj != null)
+
+            if (vanillaToggleButtonObj == null)
+                return;
+
+            UnityEngine.UI.Button button =
+                vanillaToggleButtonObj.GetComponent<UnityEngine.UI.Button>();
+
+            if (button == null)
+                return;
+
+            if (button != currentVanillaToggleButton)
             {
-                UnityEngine.UI.Button vanillaToggleButtonComp = vanillaToggleButtonObj.GetComponent<UnityEngine.UI.Button>();
-                if (vanillaToggleButtonComp != null)
-                {
-                    vanillaToggleButtonComp.onClick.AddListener(() => {
-                        editMode = !editMode;
-                        SetEditMode(editMode);
-                        if (removeborders != null)
-                        {
-                            removeborders.DisableBorders(editMode);
-                        }
-                    });
-                }
+                currentVanillaToggleButton = button;
+                vanillaToggleListenerAdded = false;
+            }
+
+            if (!vanillaToggleListenerAdded)
+            {
+                button.onClick.AddListener(ToggleCustomEditMode);
+
+                vanillaToggleListenerAdded = true;
+            }
+        }
+
+        private void ToggleCustomEditMode()
+        {
+            editMode = !editMode;
+
+            SetEditMode(editMode);
+
+            if (removeborders != null)
+            {
+                removeborders.DisableBorders(editMode);
             }
         }
 
@@ -781,10 +848,32 @@ namespace uimanager
                 Obj.SetActive(!Obj.activeSelf);
         }
 
+        private void OpenChatBoxManager()
+        {
+            var ChatBoxManagerButtonObj = GameObject.Find("UI/UIElements/ChatBoxMngr");
+
+            if (ChatBoxManagerButtonObj != null)
+            {
+                var ChatBoxManagerButtonComp = ChatBoxManagerButtonObj.GetComponent<UnityEngine.UI.Button>();
+                if (ChatBoxManagerButtonComp != null)
+                {
+                    ChatBoxManagerButtonComp.onClick.Invoke();
+                }
+            }
+        }
+
+        private void OpenLootDistribution()
+        {
+            var Obj = GameObject.Find("UI/UIElements/NewGroupPar/GroupCommands(1)/AwardLootGroup");
+            if (Obj != null)
+                Obj.SetActive(!Obj.activeSelf);
+        }
+
         private List<string> draggableObjectsPaths = new List<string>()
         {
             "UI/UIElements/Canvas/CompassBarProLinear",
             "UI/UIElements/Canvas/Loc",
+            "UI/UIElements/Canvas/Treasure",
             "UI/UIElements/MenuButton (1)",
             "UI/UIElements/InvButton",
             "UI/UIElements/SpellsButton",
@@ -889,6 +978,7 @@ namespace uimanager
             {
                 case "CompassBarProLinear": posCompass.Value = localPos; break;
                 case "Loc": posLoc.Value = localPos; break;
+                case "Treasure": posTreasureLoc.Value = localPos; break;
                 case "MenuButton (1)": posMenu.Value = localPos; break;
                 case "InvButton": posInventory.Value = localPos; break;
                 case "SpellsButton": posSkills.Value = localPos; break;
@@ -912,6 +1002,7 @@ namespace uimanager
             {
                 case "CompassBarProLinear": scaleCompass.Value = localScale; break;
                 case "Loc": scaleLoc.Value = localScale; break;
+                case "Treasure": scaleTreasureLoc.Value = localScale; break;
                 case "MenuButton (1)": scaleMenu.Value = localScale; break;
                 case "InvButton": scaleInventory.Value = localScale; break;
                 case "SpellsButton": scaleSkills.Value = localScale; break;
